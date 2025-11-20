@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 import { format } from 'date-fns'
+import { moon } from './moon';
 
 export const app = express();
 
@@ -42,7 +43,8 @@ app.get('/ottawa', async (req, res) => {
       sunset: weather.daily.sunset[0].split("T")[1],
       temp: weather.current.apparent_temperature + " °C",
       high: weather.daily.apparent_temperature_max[0],
-      low: weather.daily.apparent_temperature_min[0]
+      low: weather.daily.apparent_temperature_min[0],
+      lunar_phase: moon.getCurrentLunarPhase().phase
     }
 
     if (response.ok) {

@@ -3,3 +3,16 @@ body {
   margin: 4rem;
   font-family: sans-serif;
 }
+
+#sun-line-container {
+  background-color: black;
+  display: flex;
+  gap: 0.2rem;
+  justify-content: space-between;
+}
+
+#sun-line-container > div {
+  background-color: rgb(231, 231, 173);
+  width: 100%;
+  text-align: center;
+}

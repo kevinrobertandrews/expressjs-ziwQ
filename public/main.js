@@ -14,6 +14,7 @@ async function run() {
         <p>Low: ${data.low}</p>
         <p>Sunrise: ${data.sunrise}</p>
         <p>Sunset: ${data.sunset}</p>
+        <p>Moon: ${data.lunar_phase}</p>
     </div>
     `
 }
