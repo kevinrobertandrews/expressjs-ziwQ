@@ -9,16 +9,59 @@ app.use(express.json());
 app.use(express.raw({ type: 'application/vnd.custom-type' }));
 app.use(express.text({ type: 'text/html' }));
 
-// Healthcheck endpoint
-app.get('/', (req, res) => {
-  res.status(200).send({ status: 'ok!!!!!!!!' });
-});
+interface Time {
+  iso: string;
+  hour12: string;
+  hour24: string
+  ms: number
+}
 
-const api = express.Router();
+interface Temperature {
+  value: string;
+  unit: string;
+}
 
-api.get('/hello', (req, res) => {
-  res.status(200).send({ message: 'hello world' });
-});
+interface OpenMeteoResponse {
+  apparent_temperature: string;
+  daily: {
+    time: string[],
+    sunset: string[], // iso
+    sunrise: string[] // iso
+  }
+}
 
-// Version the api
-app.use('/api/v1', api);
+interface WeatherResponse {
+  sunrise: Time
+  sunset: Time
+  temperature: Temperature
+}
+
+app.get('/ottawa', async (req, res) => {
+
+  const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&daily=sunset,sunrise&timezone=America%2FNew_York");
+
+  const weather = await response.json() as OpenMeteoResponse;
+
+  const result: WeatherResponse = {
+    sunrise: {
+      iso: weather.daily.sunrise[0],
+      hour12: "121212",
+      hour24: "242424",
+      ms: 123
+    },
+    sunset: {
+      iso: weather.daily.sunset[0],
+      hour12: "121212",
+      hour24: "242424",
+      ms: 234
+    },
+    temperature: {
+      value: weather.apparent_temperature,
+      unit: "C"
+    }
+  }
+
+  if (response.ok) {
+    res.status(200).send({ status: "success", data: result })
+  }
+})
