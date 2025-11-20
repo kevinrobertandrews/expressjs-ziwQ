@@ -10,6 +10,7 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.raw({ type: 'application/vnd.custom-type' }));
 app.use(express.text({ type: 'text/html' }));
+app.use(express.static('public'))
 
 
 interface OpenMeteoResponse {
@@ -28,15 +29,19 @@ interface OpenMeteoResponse {
 app.get('/ottawa', async (req, res) => {
 
   try {
-    const ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&daily=sunset,sunrise&current=apparent_temperature&timezone=America%2FNew_York"
+    // https://open-meteo.com/
+    const ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&daily=sunset,sunrise,temperature_2m_max,temperature_2m_min&current=apparent_temperature&timezone=America%2FNew_York"
     const response = await fetch(ENDPOINT);
     const weather = await response.json() as OpenMeteoResponse;
+    console.log(weather)
 
     const result = {
       day: format(Date.now(), "EEE, MMM dd"),
       sunrise: weather.daily.sunrise[0].split("T")[1],
       sunset: weather.daily.sunset[0].split("T")[1],
-      temp: weather.current.apparent_temperature + " °C"
+      temp: weather.current.apparent_temperature + " °C",
+      high: "not-implemented",
+      low: "not-implemented"
     }
 
     if (response.ok) {
