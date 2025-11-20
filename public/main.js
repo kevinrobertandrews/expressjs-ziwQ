@@ -12,7 +12,6 @@ async function run() {
         <p>Current Temp: ${data.temp}</p>
         <p>High: ${data.high}</p>
         <p>Low: ${data.low}</p>
-        <p>hi there</p>
         <p>Sunrise: ${data.sunrise}</p>
         <p>Sunset: ${data.sunset}</p>
     </div>
