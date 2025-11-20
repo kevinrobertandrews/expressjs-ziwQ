@@ -21,10 +21,14 @@ interface Time {
 interface Temperature {
   value: string;
   unit: string;
+  time: string;
 }
 
 interface OpenMeteoResponse {
-  apparent_temperature: string;
+  current: {
+    time: string;
+    apparent_temperature: string;
+  }
   daily: {
     time: string[],
     sunset: string[], // iso
@@ -32,19 +36,17 @@ interface OpenMeteoResponse {
   }
 }
 
-interface WeatherResponse {
-  sunrise: Time
-  sunset: Time
-  temperature: Temperature
-}
 
 app.get('/ottawa', async (req, res) => {
 
-  const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&daily=sunset,sunrise&timezone=America%2FNew_York");
+  const ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&daily=sunset,sunrise&current=apparent_temperature&timezone=America%2FNew_York"
+
+  const response = await fetch(ENDPOINT);
 
   const weather = await response.json() as OpenMeteoResponse;
+  console.log({ weather })
 
-  const result: WeatherResponse = {
+  const result = {
     sunrise: {
       iso: weather.daily.sunrise[0],
       hour12: "121212",
@@ -58,8 +60,9 @@ app.get('/ottawa', async (req, res) => {
       ms: getHours(weather.daily.sunset[0])
     },
     temperature: {
-      value: weather.apparent_temperature,
-      unit: "C"
+      value: weather.current.apparent_temperature,
+      unit: "C",
+      time: weather.current.time.split("T")[1]
     }
   }
 
