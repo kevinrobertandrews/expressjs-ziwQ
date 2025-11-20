@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { getHours } from 'date-fns'
+import { format, getHours } from 'date-fns'
 
 export const app = express();
 
@@ -33,25 +33,14 @@ app.get('/ottawa', async (req, res) => {
     const weather = await response.json() as OpenMeteoResponse;
 
     const result = {
-      sunrise: {
-        iso: weather.daily.sunrise[0],
-        time: weather.daily.sunrise[0].split("T")[1],
-        ms: getHours(weather.daily.sunrise[0])
-      },
-      sunset: {
-        iso: weather.daily.sunset[0],
-        time: weather.daily.sunset[0].split("T")[1],
-        ms: getHours(weather.daily.sunset[0])
-      },
-      temperature: {
-        value: weather.current.apparent_temperature,
-        time: weather.current.time.split("T")[1],
-        unit: "C",
-      }
+      day: format(Date.now(), "EEE, MMM dd"),
+      sunrise: weather.daily.sunrise[0].split("T")[1],
+      sunset: weather.daily.sunset[0].split("T")[1],
+      temp: weather.current.apparent_temperature + " °C"
     }
 
     if (response.ok) {
-      res.status(200).send({ status: "success", timestamp: new Date().toISOString(), data: result })
+      res.status(200).send({ data: result })
     }
   } catch (err) {
     throw Error("Unexpected error.");
