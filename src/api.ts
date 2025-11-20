@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
+import { getHours } from 'date-fns'
+
 export const app = express();
 
 app.use(cors({ origin: true }));
@@ -46,14 +48,14 @@ app.get('/ottawa', async (req, res) => {
     sunrise: {
       iso: weather.daily.sunrise[0],
       hour12: "121212",
-      hour24: "242424",
-      ms: 123
+      hour24: weather.daily.sunrise[0].split("T")[1],
+      ms: getHours(weather.daily.sunrise[0])
     },
     sunset: {
       iso: weather.daily.sunset[0],
       hour12: "121212",
-      hour24: "242424",
-      ms: 234
+      hour24: weather.daily.sunset[0].split("T")[1],
+      ms: getHours(weather.daily.sunset[0])
     },
     temperature: {
       value: weather.apparent_temperature,
@@ -62,6 +64,6 @@ app.get('/ottawa', async (req, res) => {
   }
 
   if (response.ok) {
-    res.status(200).send({ status: "success", data: result })
+    res.status(200).send({ status: "success", timestamp: new Date().toISOString(), data: result })
   }
 })
