@@ -33,7 +33,6 @@ app.get('/ottawa', async (req, res) => {
     const ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&daily=sunset,sunrise,temperature_2m_max,temperature_2m_min&current=apparent_temperature&timezone=America%2FNew_York"
     const response = await fetch(ENDPOINT);
     const weather = await response.json() as OpenMeteoResponse;
-    console.log(weather)
 
     const result = {
       day: format(Date.now(), "EEE, MMM dd"),
