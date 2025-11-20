@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { format, getHours } from 'date-fns'
+import { format } from 'date-fns'
 
 export const app = express();
 
